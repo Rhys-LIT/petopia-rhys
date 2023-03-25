@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -18,7 +19,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "customers")
-public class Customer implements Serializable {
+public class Customer extends RepresentationModel<Customer> implements Serializable {
 
     @Id
     @NotNull
