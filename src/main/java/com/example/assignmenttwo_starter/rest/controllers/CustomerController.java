@@ -2,6 +2,7 @@ package com.example.assignmenttwo_starter.rest.controllers;
 
 import com.example.assignmenttwo_starter.model.Customer;
 import com.example.assignmenttwo_starter.services.CustomerService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
@@ -29,6 +30,9 @@ public class CustomerController {
      * @return - Returns the customer object created. If an error occurs, return a bad request
      */
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @Operation(summary = " Create a new customer\n" +
+              " @param newCustomer - Customer object to be created\n" +
+              "* @return - Returns the customer object created. If an error occurs, return a bad request")
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer newCustomer) {
 
         try {
@@ -45,6 +49,9 @@ public class CustomerController {
      * @return - Returns a string indicating if the customer was deleted successfully or not. If a customer with the specified id is not found, return a not found response
      */
     @DeleteMapping(value = "/{customerId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
+    @Operation(summary = "Delete a customer\n" +
+              " @param customerId The id of the customer to be deleted\n" +
+              " * @return - Returns a string indicating if the customer was deleted successfully or not. If a customer with the specified id is not found, return a not found response")
     public ResponseEntity<String> deleteCustomer(@PathVariable("customerId") Integer customerId) {
         var customerOptional = customerService.findById(customerId);
         if (customerOptional.isEmpty()) {
@@ -65,6 +72,9 @@ public class CustomerController {
      * @return - Returns the customer for the specified ID. If a customer with the specified id is not found, return a not found response
      */
     @GetMapping(value = "/{customerId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @Operation(summary = "Get a customer by id\n" +
+              " @param customerId The ID of the customer to be retrieved\n" +
+              " * @return - Returns the customer for the specified ID. If a customer with the specified id is not found, return a not found response")
     public ResponseEntity<Customer> getCustomerById(@PathVariable("customerId") Integer customerId) {
         Optional<Customer> customerOptional = customerService.findById(customerId);
 
@@ -86,6 +96,8 @@ public class CustomerController {
      * @return - Returns a list of all customers
      */
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @Operation(summary = "Get all customers\n" +
+              " * @return - Returns a list of all customers")
     public CollectionModel<Customer> getCustomers() {
         List<Customer> customers = customerService.findAll();
         addLinksToCustomers(customers);
@@ -100,6 +112,10 @@ public class CustomerController {
      * @return If successful, returns the updated customer object. If unsuccessful, returns a bad request response. If the customer ID in the path does not match the customer ID in the body, returns a bad request response.
      */
     @PutMapping(value = "/{customerId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @Operation(summary = "Updates a customer\n" +
+              " @param customerId The ID of the customer to update\n" +
+              " @param updatedCustomer The customer object with the updated information to save\n" +
+              " * @return If successful, returns the updated customer object. If unsuccessful, returns a bad request response. If the customer ID in the path does not match the customer ID in the body, returns a bad request response.")
     public ResponseEntity<Customer> updateCustomer(@PathVariable int customerId, @RequestBody Customer updatedCustomer) {
         if (updatedCustomer.getCustomerId() != null && updatedCustomer.getCustomerId() != customerId) {
             return ResponseEntity.badRequest().build();
