@@ -22,7 +22,7 @@ public class OrderItem  implements Serializable {
     @Id
     @NotNull
     @Column(name = "order_item_id")
-    private Integer orderItemId;
+    private Integer id;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -35,11 +35,11 @@ public class OrderItem  implements Serializable {
     @ManyToOne
     @JsonBackReference
     @ToString.Exclude
-    private Orders orderId;
+    private Order order;
 
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     @ManyToOne
     @JsonBackReference
     @ToString.Exclude
-    private Product productId;
+    private Product product;
 }

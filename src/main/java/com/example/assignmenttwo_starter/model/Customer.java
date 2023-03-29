@@ -9,7 +9,6 @@ import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -24,7 +23,7 @@ public class Customer extends RepresentationModel<Customer> implements Serializa
     @Id
     @NotNull
     @Column(name = "customer_id")
-    private Integer customerId;
+    private Integer id;
 
     @Size(max = 50)
     @Column(name = "first_name")
@@ -43,11 +42,11 @@ public class Customer extends RepresentationModel<Customer> implements Serializa
     // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//consider using this annotation to enforce field validation
     @Size(max = 20)
     @Column(name = "phone")
-    private String phone;
+    private String telephone;
 
     @Size(max = 255)
     @Column(name = "address")
-    private String address;
+    private String streetAddress;
 
     @Size(max = 50)
     @Column(name = "city")
@@ -61,13 +60,13 @@ public class Customer extends RepresentationModel<Customer> implements Serializa
     @Column(name = "postcode")
     private String postcode;
 
-    @OneToMany(mappedBy = "customerId")
+    @OneToMany(mappedBy = "customer")
     @JsonManagedReference
     @ToString.Exclude
-    private List<Review> reviewCollection;
+    private List<Review> reviews;
 
-    @OneToMany(mappedBy = "customerId")
+    @OneToMany(mappedBy = "customer")
     @JsonManagedReference
     @ToString.Exclude
-    private List<Orders> ordersCollection;
+    private List<Order> orders;
 }

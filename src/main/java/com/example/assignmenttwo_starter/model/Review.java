@@ -21,7 +21,7 @@ public class Review implements Serializable {
     @Id
     @NotNull
     @Column(name = "review_id")
-    private Integer reviewId;
+    private Integer id;
 
     @Column(name = "rating")
     private Integer rating;
@@ -35,11 +35,11 @@ public class Review implements Serializable {
     @ManyToOne
     @JsonBackReference
     @ToString.Exclude
-    private Product productId;
+    private Product product;
 
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     @ManyToOne
     @JsonBackReference
     @ToString.Exclude
-    private Customer customerId;
+    private Customer customer;
 }

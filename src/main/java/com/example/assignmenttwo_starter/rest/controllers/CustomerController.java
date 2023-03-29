@@ -117,7 +117,7 @@ public class CustomerController {
               " @param updatedCustomer The customer object with the updated information to save\n" +
               " * @return If successful, returns the updated customer object. If unsuccessful, returns a bad request response. If the customer ID in the path does not match the customer ID in the body, returns a bad request response.")
     public ResponseEntity<Customer> updateCustomer(@PathVariable int customerId, @RequestBody Customer updatedCustomer) {
-        if (updatedCustomer.getCustomerId() != null && updatedCustomer.getCustomerId() != customerId) {
+        if (updatedCustomer.getId() != null && updatedCustomer.getId() != customerId) {
             return ResponseEntity.badRequest().build();
         }
         try {
@@ -136,7 +136,7 @@ public class CustomerController {
      */
     public static void addLinksToCustomers(List<Customer> customers) {
         for (Customer customer : customers) {
-            Integer customerId = customer.getCustomerId();
+            Integer customerId = customer.getId();
 
             //TODO: Orders
             Link selfLink = linkTo(methodOn(CustomerController.class).getCustomerById(customerId)).withSelfRel();

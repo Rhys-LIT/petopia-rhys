@@ -2,7 +2,7 @@
 -- data for table `categories`
 --
 
-INSERT INTO `categories` (`category_id`, `name`) VALUES
+INSERT INTO `categories` (`id`, `name`) VALUES
 (1, 'Dog Supplies'),
 (2, 'Cat Supplies'),
 (3, 'Bird Supplies'),
@@ -314,7 +314,7 @@ INSERT INTO `orders` (`order_id`, `customer_id`, `order_date`, `total`, `order_s
 --
 
 
-INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `categogy_id`, `image`) VALUES
+INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `category`, `image`) VALUES
 (1, 'Royal Canin Maxi Adult', 'Premium quality dog food', '69.99', 1, 'IMG_25636.JPG'),
 (2, 'Royal Canin Weight Control Cat Food', 'Healthy cat food', '99.99', 2, 'IMG_25637.JPG'),
 (3, 'Bird Cage', 'Large bird cage', '199.99', 3, 'IMG_25638.JPG'),

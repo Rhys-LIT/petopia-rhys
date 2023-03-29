@@ -22,16 +22,16 @@ public class OrderStatus implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "order_status_id")
-    private Integer orderStatusId;
+    private Integer id;
 
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "status")
-    private String status;
+    private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderStatusId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderStatus")
     @JsonManagedReference
     @ToString.Exclude
-    private List<Orders> ordersCollection;
+    private List<Order> orders;
 }

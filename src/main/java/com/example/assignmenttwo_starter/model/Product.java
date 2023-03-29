@@ -25,7 +25,7 @@ public class Product  implements Serializable {
     @Id
     @NotNull
     @Column(name = "product_id")
-    private Integer productId;
+    private Integer id;
 
     @Size(max = 255)
     @Column(name = "name")
@@ -44,19 +44,19 @@ public class Product  implements Serializable {
     @Column(name = "image")
     private String image;
 
-    @OneToMany(mappedBy = "productId")
+    @OneToMany(mappedBy = "product")
     @JsonManagedReference
     @ToString.Exclude
-    private List<Review> reviewCollection;
+    private List<Review> reviews;
 
-    @OneToMany(mappedBy = "productId")
+    @OneToMany(mappedBy = "product")
     @JsonManagedReference
     @ToString.Exclude
-    private List<OrderItem> orderItemCollection;
+    private List<OrderItem> orderItems;
 
-    @JoinColumn(name = "categogy_id", referencedColumnName = "category_id")
+    @JoinColumn(name = "category", referencedColumnName = "id")
     @ManyToOne(optional = false)
     @JsonBackReference
     @ToString.Exclude
-    private Category categoryId;
+    private Category category;
 }
