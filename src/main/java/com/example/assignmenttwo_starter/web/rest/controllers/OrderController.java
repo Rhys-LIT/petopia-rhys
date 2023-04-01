@@ -1,14 +1,12 @@
-package com.example.assignmenttwo_starter.rest.controllers;
+package com.example.assignmenttwo_starter.web.rest.controllers;
 
 import com.example.assignmenttwo_starter.model.Order;
 import com.example.assignmenttwo_starter.services.OrderService;
 import com.example.assignmenttwo_starter.utilities.OrderPdfPrinter;
-import com.itextpdf.text.DocumentException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletResponse;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;

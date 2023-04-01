@@ -1,4 +1,4 @@
-package com.example.assignmenttwo_starter.rest.controllers;
+package com.example.assignmenttwo_starter.web.rest.controllers;
 
 import com.example.assignmenttwo_starter.model.Customer;
 import com.example.assignmenttwo_starter.services.CustomerService;
