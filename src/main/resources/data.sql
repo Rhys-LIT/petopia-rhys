@@ -478,3 +478,8 @@ INSERT INTO `reviews` (`review_id`, `product_id`, `customer_id`, `rating`, `comm
 (64, 3, 121, 5, 'Great quality. One happy customer and pet.'),
 (65, 7, 123, 4, 'Well-made and priced just about right.'),
 (66, 10, 127, 4, 'My pet loved this.');
+
+
+INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `category`, `url`) VALUES
+                                                                                             /kennels
+/gromming
