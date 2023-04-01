@@ -5,7 +5,10 @@ import com.example.assignmenttwo_starter.services.OrderService;
 import com.example.assignmenttwo_starter.utilities.OrderPdfPrinter;
 import com.itextpdf.text.DocumentException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletResponse;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
@@ -30,13 +33,12 @@ public class OrderController {
 
     /**
      * Create a new order
+     *
      * @param newOrder - Order object to be created
      * @return - Returns the order object created. If an error occurs, return a bad request
      */
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = " Create a new order\n" +
-                        " @param newOrder - Order object to be created\n" +
-                        "* @return - Returns the order object created. If an error occurs, return a bad request")
+    @Operation(summary = " Create a new order")
     public ResponseEntity<Order> createOrder(@RequestBody Order newOrder) {
 
         try {
@@ -49,13 +51,12 @@ public class OrderController {
 
     /**
      * Delete a order
+     *
      * @param orderId The id of the order to be deleted
      * @return - Returns a string indicating if the order was deleted successfully or not. If a order with the specified id is not found, return a not found response
      */
     @DeleteMapping(value = "/{orderId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    @Operation(summary = "Delete a order\n" +
-              " @param orderId The id of the order to be deleted\n" +
-              " * @return - Returns a string indicating if the order was deleted successfully or not. If a order with the specified id is not found, return a not found response")
+    @Operation(summary = "Delete a order")
     public ResponseEntity<String> deleteOrder(@PathVariable("orderId") Integer orderId) {
         var orderOptional = orderService.findById(orderId);
         if (orderOptional.isEmpty()) {
@@ -72,13 +73,12 @@ public class OrderController {
 
     /**
      * Get a order by id
+     *
      * @param orderId The ID of the order to be retrieved
      * @return - Returns the order for the specified ID. If a order with the specified id is not found, return a not found response
      */
     @GetMapping(value = "/{orderId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Get a order by id\n" +
-              " @param orderId The ID of the order to be retrieved\n" +
-              " * @return - Returns the order for the specified ID. If a order with the specified id is not found, return a not found response")
+    @Operation(summary = "Get a order by id")
     public ResponseEntity<Order> getOrderById(@PathVariable("orderId") Integer orderId) {
         Optional<Order> orderOptional = orderService.findById(orderId);
 
@@ -97,11 +97,11 @@ public class OrderController {
 
     /**
      * Get all orders
+     *
      * @return - Returns a list of all orders
      */
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Get all orders\n" +
-              " * @return - Returns a list of all orders")
+    @Operation(summary = "Get all orders")
     public CollectionModel<Order> getOrders() {
         List<Order> orders = orderService.findAll();
         addLinksToOrders(orders);
@@ -110,28 +110,35 @@ public class OrderController {
     }
 
     /**
-     * Updates a order
-     * @param orderId The ID of the order to update
+     * Updates an order
+     *
+     * @param orderId      The ID of the order to update
      * @param updatedOrder The order object with the updated information to save
      * @return If successful, returns the updated order object. If unsuccessful, returns a bad request response. If the order ID in the path does not match the order ID in the body, returns a bad request response.
      */
+    @Operation(
+            summary = "Updates a order",
+            parameters = {
+                    @Parameter(name = "orderId", description = "The ID of the order to update"),
+                    @Parameter(name = "updatedOrder", description = "The order object with the updated information to save",
+                            schema = @Schema(implementation = Order.class))
+            }
+    )
     @PutMapping(value = "/{orderId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Updates a order\n" +
-              " @param orderId The ID of the order to update\n" +
-              " @param updatedOrder The order object with the updated information to save\n" +
-              " * @return If successful, returns the updated order object. If unsuccessful, returns a bad request response. If the order ID in the path does not match the order ID in the body, returns a bad request response.")
     public ResponseEntity<Order> updateOrder(@PathVariable int orderId, @RequestBody Order updatedOrder) {
+        ResponseEntity<Order> result;
         if (updatedOrder.getId() != null && updatedOrder.getId() != orderId) {
-            return ResponseEntity.badRequest().build();
+            result = ResponseEntity.badRequest().build();
+        } else {
+            try {
+                Order order = orderService.updateOrder(updatedOrder);
+                result = ResponseEntity.ok(order);
+            } catch (Exception e) {
+                result = ResponseEntity.badRequest().build();
+            }
         }
-        try {
-            Order order = orderService.updateOrder(updatedOrder);
-            return ResponseEntity.ok(order);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return result;
     }
-
 
     // Static Methods
 
