@@ -18,23 +18,28 @@ public class OrderService {
     public Order createOrder(Order order) {
         return orderRepository.save(order);
     }
-    public Order deleteOrder(Integer orderId) {
-    Order order = orderRepository
-            .findById(orderId)
-            .orElseThrow(() -> new IllegalArgumentException("Order with ID " + orderId + " not found"));
 
-    orderRepository.delete(order);
-    return order;
-}
+    public Order deleteOrder(Integer orderId) {
+        Order order = orderRepository
+                .findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order with ID " + orderId + " not found"));
+
+        orderRepository.delete(order);
+        return order;
+    }
+
     public List<Order> findAll() {
         return orderRepository.findAll();
     }
+
     public Page<Order> findAll(PageRequest pageRequest) {
         return orderRepository.findAll(pageRequest);
     }
+
     public Optional<Order> findById(Integer orderId) {
         return orderRepository.findById(orderId);
     }
+
     public Order updateOrder(Order order) {
         return orderRepository.save(order);
     }
