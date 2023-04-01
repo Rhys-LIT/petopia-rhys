@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "orders")
-public class Order implements Serializable {
+public class Order extends RepresentationModel<Order> implements Serializable {
 
     @Id
     @Basic(optional = false)
