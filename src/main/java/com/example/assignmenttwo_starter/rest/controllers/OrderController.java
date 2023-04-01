@@ -140,6 +140,40 @@ public class OrderController {
         return result;
     }
 
+    @GetMapping(value = "/{orderId}/pdf")
+    public void getOrderDocumentById(HttpServletResponse response, @PathVariable("orderId") Integer orderId) {
+        Optional<Order> orderOptional = orderService.findById(orderId);
+
+        if (orderOptional.isEmpty()) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
+            try {
+                response.getWriter().write("Order not found");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        Order order = orderOptional.get();
+        String fileName = "order-" + order.getId() + ".pdf";
+        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+
+        String productsDirectoryPath = "static/assets/images/thumbs/";
+        var invoicePdfBuilder = new OrderPdfPrinter(order, productsDirectoryPath);
+        try {
+            invoicePdfBuilder.generatePdfReport(response.getOutputStream());
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
+            try {
+                response.getOutputStream().close();
+                response.getWriter().write("Failed to generate PDF");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+    }
     // Static Methods
 
     /**
