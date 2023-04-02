@@ -480,6 +480,15 @@ INSERT INTO `reviews` (`review_id`, `product_id`, `customer_id`, `rating`, `comm
 (66, 10, 127, 4, 'My pet loved this.');
 
 
-INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `category`, `url`) VALUES
-                                                                                             /kennels
-/gromming
+INSERT INTO `subscription` (`id`, `name`, `description`, `url`) VALUES
+(1, 'Grooming services', 'Pettopia could offer pet grooming services in addition to selling pet products. This could include services such as bathing, clipping nails, and grooming.', 'https://en.wikipedia.org/wiki/Pet_grooming'),
+(2, 'Boarding and day-care services', 'Pettopia could offer pet boarding and day-care services for customers who need a safe and comfortable place for their pets while they''re away.', 'https://en.wikipedia.org/wiki/Pet_boarding'),
+(3, 'Training services', 'Pettopia could offer pet training services to help pet owners train their pets and correct behavior problems.', 'https://en.wikipedia.org/wiki/Dog_training'),
+(4, 'Pet adoption services', 'Pettopia could partner with local animal shelters and rescue organizations to offer pet adoption services to customers.', 'https://en.wikipedia.org/wiki/Pet_adoption'),
+(5, 'Pet-related travel services', 'Pettopia could look to offer pet-related travel information, such as pet-friendly holiday rentals, pet-friendly hotels, and pet- friendly transportation options. This can include mapping data and location- specific data.', 'https://en.wikipedia.org/wiki/Pet-friendly_hotels'),
+(6, 'Pet-related events and activities', 'Pettopia could organize and sponsor pet-related events and activities, such as pet-friendly garden parties, charity walks, and adoption events.', 'https://en.wikipedia.org/wiki/Pet_friendly#Pet_friendly_events'),
+(7, 'Pet-related content and media', 'Pettopia could distribute pet-related content and media, such as videos, articles, and podcasts, to engage and educate customers.', 'https://en.wikipedia.org/wiki/Pet#Media_and_culture'),
+(8, 'Subscription services', 'Pettopia could offer pet-related subscription services, such as monthly pet toy or treat boxes.', 'https://en.wikipedia.org/wiki/Pet_subscription_box'),
+(9, 'Loyalty-programme', 'Create a loyalty program to retain customers and incentivize repeat purchases.', 'https://en.wikipedia.org/wiki/Loyalty_program'),
+(10, 'Personalization', 'Use data from a user''s profile and behavior to personalize content and services via a REST API. This can include personalized recommendations and targeted marketing.', 'https://en.wikipedia.org/wiki/Personalization'),
+(11, 'Pet health tracking', 'Pettopia could provide a REST API that tracks a pet''s health data, including vaccinations, check-ups, and other medical information, and send reminders for future appointments.', 'https://en.wikipedia.org/wiki/Pet_health');
