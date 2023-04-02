@@ -4,8 +4,6 @@ import com.example.assignmenttwo_starter.model.Order;
 import com.example.assignmenttwo_starter.services.OrderService;
 import com.example.assignmenttwo_starter.utilities.OrderPdfPrinter;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -28,46 +26,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class OrderController {
     @Autowired
     private OrderService orderService;
-
-    /**
-     * Create a new order
-     *
-     * @param newOrder - Order object to be created
-     * @return - Returns the order object created. If an error occurs, return a bad request
-     */
-    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = " Create a new order")
-    public ResponseEntity<Order> createOrder(@RequestBody Order newOrder) {
-
-        try {
-            Order order = orderService.updateOrder(newOrder);
-            return ResponseEntity.ok(order);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    /**
-     * Delete a order
-     *
-     * @param orderId The id of the order to be deleted
-     * @return - Returns a string indicating if the order was deleted successfully or not. If a order with the specified id is not found, return a not found response
-     */
-    @DeleteMapping(value = "/{orderId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    @Operation(summary = "Delete a order")
-    public ResponseEntity<String> deleteOrder(@PathVariable("orderId") Integer orderId) {
-        var orderOptional = orderService.findById(orderId);
-        if (orderOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        try {
-            orderService.deleteOrder(orderId);
-            return ResponseEntity.ok("Order Deleted Successfully");
-        } catch (Exception e) {
-            return ResponseEntity.ok("Failed to Delete Order");
-        }
-    }
 
     /**
      * Get a order by id
@@ -107,36 +65,6 @@ public class OrderController {
         return CollectionModel.of(orders, linkTo(methodOn(getClass()).getOrders()).withSelfRel());
     }
 
-    /**
-     * Updates an order
-     *
-     * @param orderId      The ID of the order to update
-     * @param updatedOrder The order object with the updated information to save
-     * @return If successful, returns the updated order object. If unsuccessful, returns a bad request response. If the order ID in the path does not match the order ID in the body, returns a bad request response.
-     */
-    @Operation(
-            summary = "Updates a order",
-            parameters = {
-                    @Parameter(name = "orderId", description = "The ID of the order to update"),
-                    @Parameter(name = "updatedOrder", description = "The order object with the updated information to save",
-                            schema = @Schema(implementation = Order.class))
-            }
-    )
-    @PutMapping(value = "/{orderId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Order> updateOrder(@PathVariable int orderId, @RequestBody Order updatedOrder) {
-        ResponseEntity<Order> result;
-        if (updatedOrder.getId() != null && updatedOrder.getId() != orderId) {
-            result = ResponseEntity.badRequest().build();
-        } else {
-            try {
-                Order order = orderService.updateOrder(updatedOrder);
-                result = ResponseEntity.ok(order);
-            } catch (Exception e) {
-                result = ResponseEntity.badRequest().build();
-            }
-        }
-        return result;
-    }
 
     @GetMapping(value = "/{orderId}/active")
     public void getOrderDocumentById(HttpServletResponse response, @PathVariable("orderId") Integer orderId) {
@@ -196,7 +124,6 @@ public class OrderController {
     public static void addLinksToOrders(List<Order> orders) {
         for (Order order : orders) {
             Integer orderId = order.getId();
-
 
             Link selfLink = linkTo(methodOn(OrderController.class).getOrderById(orderId)).withSelfRel();
             order.add(selfLink);

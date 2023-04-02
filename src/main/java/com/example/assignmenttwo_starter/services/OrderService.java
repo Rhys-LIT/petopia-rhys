@@ -15,19 +15,6 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public Order createOrder(Order order) {
-        return orderRepository.save(order);
-    }
-
-    public Order deleteOrder(Integer orderId) {
-        Order order = orderRepository
-                .findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order with ID " + orderId + " not found"));
-
-        orderRepository.delete(order);
-        return order;
-    }
-
     public List<Order> findAll() {
         return orderRepository.findAll();
     }
@@ -40,9 +27,6 @@ public class OrderService {
         return orderRepository.findById(orderId);
     }
 
-    public Order updateOrder(Order order) {
-        return orderRepository.save(order);
-    }
 }
 
 
