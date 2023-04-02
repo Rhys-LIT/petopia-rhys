@@ -1,8 +1,9 @@
 package com.example.assignmenttwo_starter.web.rest.controllers;
 
 import com.example.assignmenttwo_starter.model.Subscription;
-import com.example.assignmenttwo_starter.model.Order;
 import com.example.assignmenttwo_starter.services.SubscriptionService;
+import com.example.assignmenttwo_starter.utilities.QrCodeUtility;
+import com.example.assignmenttwo_starter.utilities.SubscriptionVCardUtility;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,8 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,6 +100,37 @@ public class SubscriptionRestController {
         return ResponseEntity.ok(subscription);
     }
 
+    @GetMapping(value = "/{subscriptionId}/qrcode", produces = MediaType.IMAGE_PNG_VALUE)
+    @Operation(summary = "Get a subscription link by id")
+    public ResponseEntity<BufferedImage> getSubscriptionLinkQrCodeById(@PathVariable("subscriptionId") int subscriptionId) throws Exception {
+        Optional<Subscription> subscriptionOptional = subscriptionService.findById(subscriptionId);
+
+        if (subscriptionOptional.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Subscription subscription = subscriptionOptional.get();
+
+        var bufferedImage = QrCodeUtility.getQrCodeImage(subscription.getUrl(),275);
+        return ResponseEntity.ok(bufferedImage);
+    }
+
+    @GetMapping(value = "/{subscriptionId}/vcard", produces = MediaType.IMAGE_PNG_VALUE)
+    @Operation(summary = "Get a subscription vcard by id")
+    public ResponseEntity<BufferedImage> getSubscriptionVCardQrCodeById(@PathVariable("subscriptionId") int subscriptionId) throws Exception {
+        Optional<Subscription> subscriptionOptional = subscriptionService.findById(subscriptionId);
+
+        if (subscriptionOptional.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+
+        Subscription subscription = subscriptionOptional.get();
+
+
+        var vCard = SubscriptionVCardUtility.getVCard(subscription);
+
+        var bufferedImage = QrCodeUtility.getQrCodeImage(vCard.toString(),275);
+        return ResponseEntity.ok(bufferedImage);
+    }
 
     /**
      * Get all subscriptions
