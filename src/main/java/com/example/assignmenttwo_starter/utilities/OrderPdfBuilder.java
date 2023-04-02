@@ -13,11 +13,11 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class OrderPdfPrinter {
+public class OrderPdfBuilder {
     private final Order order;
     private final String productsDirectoryPath;
 
-    public OrderPdfPrinter(Order order, String productsDirectoryPath) {
+    public OrderPdfBuilder(Order order, String productsDirectoryPath) {
         this.order = order;
         this.productsDirectoryPath = productsDirectoryPath;
     }
