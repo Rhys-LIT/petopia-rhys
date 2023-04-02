@@ -28,7 +28,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/customers")
-public class CustomerController {
+public class CustomerRestController {
     @Autowired
     private CustomerService customerService;
     @Autowired
@@ -112,7 +112,7 @@ public class CustomerController {
 
         Customer customer = customerOptional.get();
 
-        customer.add(linkTo(methodOn(CustomerController.class).getCustomerById(customerId)).withSelfRel());
+        customer.add(linkTo(methodOn(CustomerRestController.class).getCustomerById(customerId)).withSelfRel());
         customer.add(linkTo(methodOn(getClass()).getCustomers()).withRel("customers"));
 
         return ResponseEntity.ok(customer);
@@ -144,7 +144,7 @@ public class CustomerController {
         for (Customer customer : page.getContent()) {
             Integer id = customer.getId();
 
-            Link customerLink = linkTo(methodOn(CustomerController.class).getCustomerById(id)).withRel("details");
+            Link customerLink = linkTo(methodOn(CustomerRestController.class).getCustomerById(id)).withRel("details");
             customer.add(customerLink);
         }
         Link link = linkTo(getClass()).withSelfRel();
@@ -183,10 +183,10 @@ public class CustomerController {
         for (Customer customer : customers) {
             Integer customerId = customer.getId();
 
-            Link additionalOrdersLink = linkTo(methodOn(CustomerController.class).getCustomerAssociatedOrdersByCustomerId(customerId)).withRel("Additional Orders");
+            Link additionalOrdersLink = linkTo(methodOn(CustomerRestController.class).getCustomerAssociatedOrdersByCustomerId(customerId)).withRel("Additional Orders");
             customer.add(additionalOrdersLink);
 
-            Link selfLink = linkTo(methodOn(CustomerController.class).getCustomerById(customerId)).withSelfRel();
+            Link selfLink = linkTo(methodOn(CustomerRestController.class).getCustomerById(customerId)).withSelfRel();
             customer.add(selfLink);
         }
     }

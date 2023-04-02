@@ -23,7 +23,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/orders")
-public class OrderController {
+public class OrderRestController {
     @Autowired
     private OrderService orderService;
 
@@ -44,7 +44,7 @@ public class OrderController {
 
         Order order = orderOptional.get();
 
-        order.add(linkTo(methodOn(OrderController.class).getOrderById(orderId)).withSelfRel());
+        order.add(linkTo(methodOn(OrderRestController.class).getOrderById(orderId)).withSelfRel());
         order.add(linkTo(methodOn(getClass()).getOrders()).withRel("orders"));
 
         return ResponseEntity.ok(order);
@@ -125,7 +125,7 @@ public class OrderController {
         for (Order order : orders) {
             Integer orderId = order.getId();
 
-            Link selfLink = linkTo(methodOn(OrderController.class).getOrderById(orderId)).withSelfRel();
+            Link selfLink = linkTo(methodOn(OrderRestController.class).getOrderById(orderId)).withSelfRel();
             order.add(selfLink);
         }
     }
