@@ -1,6 +1,7 @@
 package com.example.assignmenttwo_starter.web.rest.controllers;
 
 import com.example.assignmenttwo_starter.model.Customer;
+import com.example.assignmenttwo_starter.model.Order;
 import com.example.assignmenttwo_starter.services.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -8,9 +9,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -66,6 +69,25 @@ public class CustomerController {
         } catch (Exception e) {
             return ResponseEntity.ok("Failed to Delete Customer");
         }
+    }
+
+    /**
+     * Get a customer by id
+     *
+     * @param customerId The ID of the customer to be retrieved
+     * @return - Returns the customer for the specified ID. If a customer with the specified id is not found, return a not found response
+     */
+    @GetMapping(value = "/{customerId}/orders", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @Operation(summary = "Get a customer by id")
+    public CollectionModel<Order> getCustomerAssociatedOrdersByCustomerId(@PathVariable("customerId") Integer customerId) {
+        Optional<Customer> customerOptional = customerService.findById(customerId);
+
+        if (customerOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found");
+        }
+
+        Customer customer = customerOptional.get();
+        return CollectionModel.of(customer.getOrders());
     }
 
     /**
@@ -137,7 +159,9 @@ public class CustomerController {
         for (Customer customer : customers) {
             Integer customerId = customer.getId();
 
-            //TODO: Orders
+            Link additionalOrdersLink = linkTo(methodOn(CustomerController.class).getCustomerAssociatedOrdersByCustomerId(customerId)).withRel("Additional Orders");
+            customer.add(additionalOrdersLink);
+
             Link selfLink = linkTo(methodOn(CustomerController.class).getCustomerById(customerId)).withSelfRel();
             customer.add(selfLink);
         }
