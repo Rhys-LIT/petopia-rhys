@@ -138,7 +138,7 @@ public class OrderController {
         return result;
     }
 
-    @GetMapping(value = "/{orderId}/pdf")
+    @GetMapping(value = "/{orderId}/active")
     public void getOrderDocumentById(HttpServletResponse response, @PathVariable("orderId") Integer orderId) {
         Optional<Order> orderOptional = orderService.findById(orderId);
 
@@ -152,7 +152,21 @@ public class OrderController {
             }
             return;
         }
+
         Order order = orderOptional.get();
+
+        if (!order.getOrderStatus().isPendingOrProcessing()) {
+            response.setStatus(HttpStatus.METHOD_NOT_ALLOWED.value());
+            response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
+            try {
+                response.getWriter().write("Order is not active. Order has been shipped, delivered or cancelled.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
+
         String fileName = "order-" + order.getId() + ".pdf";
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
         response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");

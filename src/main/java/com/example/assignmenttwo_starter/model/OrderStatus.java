@@ -1,4 +1,5 @@
 package com.example.assignmenttwo_starter.model;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -34,4 +35,28 @@ public class OrderStatus implements Serializable {
     @JsonManagedReference
     @ToString.Exclude
     private List<Order> orders;
+
+    // Status Methods
+    public boolean isCancelled() {
+        return this.id == 4;
+    }
+
+    public boolean isDelivered() {
+        return this.id == 2;
+    }
+
+    public boolean isPending() {
+        return this.id == 5;
+    }
+    public boolean isProcessing() {
+        return this.id == 3;
+    }
+
+    public boolean isShipped() {
+        return this.id == 1;
+    }
+    // More Status Methods
+    public boolean isPendingOrProcessing() {
+        return isPending() || isProcessing();
+    }
 }
