@@ -7,8 +7,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +31,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private PagedResourcesAssembler<Customer> pagedResourcesAssembler;
 
     /**
      * Create a new customer
@@ -128,6 +135,26 @@ public class CustomerController {
         return CollectionModel.of(customers, linkTo(methodOn(getClass()).getCustomers()).withSelfRel());
     }
 
+    @Operation(summary = "Getting customers through pagination")
+    @GetMapping(value = "/page", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public PagedModel<EntityModel<Customer>> getAll(
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+    )
+    {
+        PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
+        Page<Customer> page = customerService.findAll(pageRequest);
+        for (Customer customer : page.getContent())
+        {
+            Integer id = customer.getId();
+
+            Link customerLink = linkTo(methodOn(CustomerController.class).getCustomerById(id)).withRel("details");
+            customer.add(customerLink);
+        }
+        Link link = linkTo(getClass()).withSelfRel();
+
+        return pagedResourcesAssembler.toModel(page, link);
+    }
     /**
      * Updates a customer
      *
