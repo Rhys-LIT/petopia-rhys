@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EntityScan("com.example.assignmenttwo_starter.model")
-@ComponentScan({"com.example.assignmenttwo_starter.services", "com.example.assignmenttwo_starter.rest.controllers"})
+@ComponentScan({"com.example.assignmenttwo_starter.services", "com.example.assignmenttwo_starter.web.rest.controllers"})
 @EnableJpaRepositories("com.example.assignmenttwo_starter.repositories")
 
 public class AssignmentTwoStarterApplication {
