@@ -19,23 +19,27 @@ public class CustomerService {
         customer.setId(customerRepository.getNextFreeId());
         return customerRepository.save(customer);
     }
-    public Customer deleteCustomer(Integer customerId) {
-    Customer customer = customerRepository
-            .findById(customerId)
-            .orElseThrow(() -> new IllegalArgumentException("Customer with ID " + customerId + " not found"));
 
-    customerRepository.delete(customer);
-    return customer;
-}
+    public void deleteCustomer(Integer customerId) {
+        Customer customer = customerRepository
+                .findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer with ID " + customerId + " not found"));
+
+        customerRepository.delete(customer);
+    }
+
     public List<Customer> findAll() {
         return customerRepository.findAll();
     }
+
     public Page<Customer> findAll(PageRequest pageRequest) {
         return customerRepository.findAll(pageRequest);
     }
+
     public Optional<Customer> findById(Integer customerId) {
         return customerRepository.findById(customerId);
     }
+
     public Customer updateCustomer(Customer customer) {
         return customerRepository.save(customer);
     }
