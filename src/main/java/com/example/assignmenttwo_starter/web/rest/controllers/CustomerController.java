@@ -40,15 +40,13 @@ public class CustomerController {
      * @param newCustomer - Customer object to be created
      * @return - Returns the customer object created. If an error occurs, return a bad request
      */
-    @Operation(summary = " Create a new customer")
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer newCustomer) {
-
         try {
-            Customer customer = customerService.updateCustomer(newCustomer);
+            Customer customer = customerService.createCustomer(newCustomer);
             return ResponseEntity.ok(customer);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+        } catch (Exception exception) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -140,12 +138,10 @@ public class CustomerController {
     public PagedModel<EntityModel<Customer>> getAll(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
-    )
-    {
+    ) {
         PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
         Page<Customer> page = customerService.findAll(pageRequest);
-        for (Customer customer : page.getContent())
-        {
+        for (Customer customer : page.getContent()) {
             Integer id = customer.getId();
 
             Link customerLink = linkTo(methodOn(CustomerController.class).getCustomerById(id)).withRel("details");
@@ -155,6 +151,7 @@ public class CustomerController {
 
         return pagedResourcesAssembler.toModel(page, link);
     }
+
     /**
      * Updates a customer
      *

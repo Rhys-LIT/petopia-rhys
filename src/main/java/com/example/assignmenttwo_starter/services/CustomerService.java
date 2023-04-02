@@ -16,6 +16,7 @@ public class CustomerService {
     private CustomerRepository customerRepository;
 
     public Customer createCustomer(Customer customer) {
+        customer.setId(customerRepository.getNextFreeId());
         return customerRepository.save(customer);
     }
     public Customer deleteCustomer(Integer customerId) {

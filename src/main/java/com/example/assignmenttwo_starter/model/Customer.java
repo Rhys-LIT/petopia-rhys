@@ -2,6 +2,7 @@ package com.example.assignmenttwo_starter.model;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -63,10 +64,12 @@ public class Customer extends RepresentationModel<Customer> implements Serializa
     @OneToMany(mappedBy = "customer")
     @JsonManagedReference
     @ToString.Exclude
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "customer")
     @JsonManagedReference
     @ToString.Exclude
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<Order> orders;
 }
