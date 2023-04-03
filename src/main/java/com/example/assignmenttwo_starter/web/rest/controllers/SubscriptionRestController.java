@@ -18,10 +18,15 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -42,7 +47,7 @@ public class SubscriptionRestController {
      * @return - Returns the subscription object created. If an error occurs, return a bad request
      */
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Subscription> createSubscription(@RequestBody Subscription newSubscription) {
+    public ResponseEntity<Subscription> createSubscription(@Valid @RequestBody Subscription newSubscription) {
         try {
             Subscription subscription = subscriptionService.createSubscription(newSubscription);
             return ResponseEntity.ok(subscription);
@@ -174,7 +179,7 @@ public class SubscriptionRestController {
      */
     @PutMapping(value = "/{subscriptionId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "Updates a subscription")
-    public ResponseEntity<Subscription> updateSubscription(@PathVariable int subscriptionId, @RequestBody Subscription updatedSubscription) {
+    public ResponseEntity<Subscription> updateSubscription(@PathVariable int subscriptionId,@Valid @RequestBody Subscription updatedSubscription) {
         if (updatedSubscription.getId() != subscriptionId) {
             return ResponseEntity.badRequest().build();
         }
@@ -185,6 +190,29 @@ public class SubscriptionRestController {
             return ResponseEntity.badRequest().build();
         }
     }
+    // Private Methods
+
+    /**
+     * Handles validation exceptions
+     * Required for @Valid annotation to work
+     *
+     * @link <a href="https://www.baeldung.com/spring-boot-bean-validation">Spring Boot Bean Validation</a>
+     * @param ex The exception to handle
+     * @return A map of the validation errors
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+    }
+
     // Static Methods
 
     /**

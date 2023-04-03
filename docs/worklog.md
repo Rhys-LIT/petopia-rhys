@@ -10,22 +10,23 @@
 | GET, POST, PUT and DELETE for Customer Controller                                                                                          | Done   |
 | All responses from GET, POST, PUT and DELETE HTTP <br/> methods should be in JSON by default with XML representations available            | Done   |
 | Implement Java Naming Conventions                                                                                                          | Done   | 
-| appropriate use of pagination for GET Customers                                                                                            |        |
+| appropriate use of pagination for GET Customers                                                                                            | Done   |
 | HATEOAS for GET Customer/Customers                                                                                                         | Done   |
 | GET an individual Customer should include a link to all Customers.                                                                         | Done   |
 | GET all Customers should include one “self” link                                                                                           | Done   |
-| GET all Customers should include a link for an associated Order that the Customer has<br/> along with related OrderItem and Products data. |        |
-| A non-java application that uses a GET and Post method to access the API                                                                   |        |
-| For a specified order or customer return an invoice.                                                                                       |        |
-| Create an invoice for Order.                                                                                                               |        |
-| Create a (multle) invoice for Cusomter.                                                                                                    |        |
-| Attach images to the invoice.                                                                                                              |        |
-| Filter out shipped invoices for pdf downlaod.                                                                                              |        |
-| Build additonal functionality to the API                                                                                                   |        |
-| adhere to best practice when developing your REST API.                                                                                     | Done*  |
-| Your API must be documented using Swagger.                                                                                                 | Done** |
-| use suitable bean validation where necessary                                                                                               |        |
-| errors are handled gracefully.                                                                                                             |        |
+| GET all Customers should include a link for an associated Order that the Customer has<br/> along with related OrderItem and Products data. | Done   |
+| A non-java application that uses a GET and Post method to access the API                                                                   | Done   |
+| For a specified order or customer return an invoice.                                                                                       | Done   |
+| Create an invoice for Order.                                                                                                               | Done   |
+| Attach images to the invoice.                                                                                                              | Done   |
+| Filter out shipped invoices for pdf download.                                                                                              | Done   |
+| Build additional functionality to the API                                                                                                  | Done   |
+| additional functionality:VCARD                                                                                                             | Done   |
+| additional functionality:QRCODE                                                                                                            | Done   |
+| adhere to best practice when developing your REST API.                                                                                     | Done   |
+| Your API must be documented using Swagger.                                                                                                 | Done   |
+| use suitable bean validation where necessary                                                                                               | Done   |
+| errors are handled gracefully.                                                                                                             | Done   |
 
 
 

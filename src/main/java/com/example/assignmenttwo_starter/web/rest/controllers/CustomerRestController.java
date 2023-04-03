@@ -17,10 +17,15 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -41,7 +46,7 @@ public class CustomerRestController {
      * @return - Returns the customer object created. If an error occurs, return a bad request
      */
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Customer> createCustomer(@RequestBody Customer newCustomer) {
+    public ResponseEntity<Customer> createCustomer(@Valid @RequestBody Customer newCustomer) {
         try {
             Customer customer = customerService.createCustomer(newCustomer);
             return ResponseEntity.ok(customer);
@@ -161,7 +166,7 @@ public class CustomerRestController {
      */
     @PutMapping(value = "/{customerId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "Updates a customer")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable int customerId, @RequestBody Customer updatedCustomer) {
+    public ResponseEntity<Customer> updateCustomer(@PathVariable int customerId,@Valid @RequestBody Customer updatedCustomer) {
         if (updatedCustomer.getId() != null && updatedCustomer.getId() != customerId) {
             return ResponseEntity.badRequest().build();
         }
@@ -172,8 +177,31 @@ public class CustomerRestController {
             return ResponseEntity.badRequest().build();
         }
     }
-    // Static Methods
 
+    // Private Methods
+
+    /**
+     * Handles validation exceptions
+     * Required for @Valid annotation to work
+     *
+     * @link <a href="https://www.baeldung.com/spring-boot-bean-validation">Spring Boot Bean Validation</a>
+     * @param ex The exception to handle
+     * @return A map of the validation errors
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+    }
+
+    // Static Methods
     /**
      * Adds links to a list of customers
      *
