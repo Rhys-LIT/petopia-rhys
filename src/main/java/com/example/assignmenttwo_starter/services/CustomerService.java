@@ -32,6 +32,11 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
+   public List<Customer> findAllByFirstNameEqualsIgnoreCase(String firstname){
+        return customerRepository.findAllByFirstNameEqualsIgnoreCase(firstname);
+   }
+
+
     public Page<Customer> findAll(PageRequest pageRequest) {
         return customerRepository.findAll(pageRequest);
     }

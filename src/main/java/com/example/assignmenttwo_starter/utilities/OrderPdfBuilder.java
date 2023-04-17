@@ -109,9 +109,11 @@ public class OrderPdfBuilder {
 
     public static Paragraph getHeaderParagraph(Order order) {
         var headerParagraph = new Paragraph();
+        headerParagraph.add(new Paragraph("Name:" + order.getCustomer().getFirstName() +" " + order.getCustomer().getLastName() ));
         headerParagraph.add(new Paragraph("Order #:" + order.getId().toString()));
         headerParagraph.add(new Paragraph("Date:" + order.getOrderDate().toString()));
         headerParagraph.add(new Paragraph("Status: " + order.getOrderStatus().getName()));
+        headerParagraph.add(new Paragraph(" "));
         return headerParagraph;
     }
 

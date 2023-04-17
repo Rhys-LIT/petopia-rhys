@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -37,25 +38,31 @@ public class OrderStatus implements Serializable {
     private List<Order> orders;
 
     // Status Methods
+    @JsonIgnore
     public boolean isCancelled() {
         return this.id == 4;
     }
 
+    @JsonIgnore
     public boolean isDelivered() {
         return this.id == 2;
     }
 
+    @JsonIgnore
     public boolean isPending() {
         return this.id == 5;
     }
+    @JsonIgnore
     public boolean isProcessing() {
         return this.id == 3;
     }
 
+    @JsonIgnore
     public boolean isShipped() {
         return this.id == 1;
     }
     // More Status Methods
+    @JsonIgnore
     public boolean isPendingOrProcessing() {
         return isPending() || isProcessing();
     }

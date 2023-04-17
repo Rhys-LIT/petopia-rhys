@@ -22,13 +22,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping(name = "Order Rest Controller", value = "/orders")
 public class OrderRestController {
     @Autowired
     private OrderService orderService;
 
     /**
-     * Get a order by id
+     * Get an order by id
      *
      * @param orderId The ID of the order to be retrieved
      * @return - Returns the order for the specified ID. If a order with the specified id is not found, return a not found response

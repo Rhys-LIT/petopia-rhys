@@ -153,7 +153,7 @@ public class SubscriptionRestController {
 
     @Operation(summary = "Getting subscriptions through pagination")
     @GetMapping(value = "/page", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public PagedModel<EntityModel<Subscription>> getAll(
+    public PagedModel<EntityModel<Subscription>> getPage(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
     ) {
@@ -165,9 +165,8 @@ public class SubscriptionRestController {
             Link subscriptionLink = linkTo(methodOn(SubscriptionRestController.class).getSubscriptionById(id)).withRel("details");
             subscription.add(subscriptionLink);
         }
-        Link link = linkTo(getClass()).withSelfRel();
 
-        return pagedResourcesAssembler.toModel(page, link);
+        return pagedResourcesAssembler.toModel(page);
     }
 
     /**

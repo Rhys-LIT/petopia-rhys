@@ -70,7 +70,7 @@ public class CustomerRestController {
     public ResponseEntity<String> deleteCustomer(@PathVariable("customerId") Integer customerId) {
         var customerOptional = customerService.findById(customerId);
         if (customerOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Customer for id:" + customerId);
         }
 
         try {
@@ -119,8 +119,19 @@ public class CustomerRestController {
 
         customer.add(linkTo(methodOn(CustomerRestController.class).getCustomerById(customerId)).withSelfRel());
         customer.add(linkTo(methodOn(getClass()).getCustomers()).withRel("customers"));
+        customer.add(linkTo(methodOn(getClass()).getCustomerAssociatedOrdersByCustomerId(customerId)).withRel("orders"));
+
 
         return ResponseEntity.ok(customer);
+    }
+
+    @GetMapping(value = "/firstname/{customerFirstName}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @Operation(summary = "Get a customer by first name")
+    public CollectionModel<Customer> getCustomersByFirstName(@PathVariable("customerFirstName") String customerFirstName) {
+        List<Customer> customers = customerService.findAllByFirstNameEqualsIgnoreCase(customerFirstName);
+        addLinksToCustomers(customers);
+
+        return CollectionModel.of(customers, linkTo(methodOn(getClass()).getCustomersByFirstName(customerFirstName)).withSelfRel());
     }
 
 
@@ -152,9 +163,8 @@ public class CustomerRestController {
             Link customerLink = linkTo(methodOn(CustomerRestController.class).getCustomerById(id)).withRel("details");
             customer.add(customerLink);
         }
-        Link link = linkTo(getClass()).withSelfRel();
 
-        return pagedResourcesAssembler.toModel(page, link);
+        return pagedResourcesAssembler.toModel(page);
     }
 
     /**
@@ -166,7 +176,7 @@ public class CustomerRestController {
      */
     @PutMapping(value = "/{customerId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "Updates a customer")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable int customerId,@Valid @RequestBody Customer updatedCustomer) {
+    public ResponseEntity<Customer> updateCustomer(@PathVariable int customerId, @Valid @RequestBody Customer updatedCustomer) {
         if (updatedCustomer.getId() != null && updatedCustomer.getId() != customerId) {
             return ResponseEntity.badRequest().build();
         }
@@ -184,16 +194,15 @@ public class CustomerRestController {
      * Handles validation exceptions
      * Required for @Valid annotation to work
      *
-     * @link <a href="https://www.baeldung.com/spring-boot-bean-validation">Spring Boot Bean Validation</a>
-     * @param ex The exception to handle
+     * @param exception The exception to handle
      * @return A map of the validation errors
+     * @link <a href="https://www.baeldung.com/spring-boot-bean-validation">Spring Boot Bean Validation</a>
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException exception) {
+        var errors = new HashMap<String, String>();
+        exception.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
@@ -202,6 +211,7 @@ public class CustomerRestController {
     }
 
     // Static Methods
+
     /**
      * Adds links to a list of customers
      *
